@@ -69,6 +69,42 @@
     font-weight: bold;
     color: #007bff; /* Couleur du résultat */
     }
+
+    .age-result {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.age-year {
+    color: #007bff;
+}
+
+.age-month {
+    color: #6c757d;
+}
+
+.age-day {
+    color: #28a745;
+}
+
+.age-second {
+    color: #dc3545;
+}
+
+.age-container {
+    display: flex; /* Utilisation de flexbox pour le centrage */
+    justify-content: center; /* Centre horizontalement */
+    width: 100%; /* Le conteneur occupe toute la largeur */
+    margin-top: 20px; /* Marge au-dessus pour espacer du formulaire */
+}
+
+.age-result {
+    text-align: center; /* Centre le texte à l'intérieur du conteneur */
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #007bff;
+}
+
   </style>
 
   <!-- Main CSS File -->
@@ -145,26 +181,15 @@
               {{ form.as_p }}
               <button type="submit">Calculer</button>
           </form>
-          
-          <div id="resultat" style="display: none;">  </div>
-          
-          <script>
-              const form = document.getElementById('dateForm');
-              const datePicker = document.getElementById('datePicker');
-              const resultatDiv = document.getElementById('resultat');
-          
-              form.addEventListener('submit', function(event) {
-                  event.preventDefault(); // Empêche la soumission par défaut du formulaire
-          
-                  const selectedDate = new Date(datePicker.value);
-                  const today = new Date();
-          
-                  const diffYears = today.getFullYear() - selectedDate.getFullYear();
-          
-                  resultatDiv.textContent = "Votre âge est de  : " + diffYears + " ans";
-                  resultatDiv.style.display = 'block'; // Affiche le résultat
-              });
-          </script>
+
+          <div class="age-container">
+            <div class="age-result">
+              {% if diff %}
+              <p> Âge : <strong>{{ years }}</strong> <small>ans</small>, <strong>{{ months }}</strong> <small>mois</small>, <strong>{{ days }}</strong> <small>jours</small>, <strong>{{ seconds }}</strong> <small>secondes</small></p>
+              {% endif %}  
+            </div>
+          </div>
+
           </div>
 
         </div>
@@ -187,6 +212,7 @@
       </div>
     </div>
 
+    
   </footer>
 
   <!-- Scroll Top -->

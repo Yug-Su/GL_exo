@@ -11,9 +11,17 @@ def index(request):
         if form.is_valid():
             date_user = form.cleaned_data['date']
             date_now = date.today()
-            diff_years = date_now.year - date_user.year
+            diff = date_now - date_user
 
-            return render(request, 'votre_template.html', {'diff_years': diff_years})
+            # Extraction des années, mois, jours
+            years = diff.days // 365
+            months = (diff.days % 365) // 30  # Approximation des mois
+            days = (diff.days % 365) % 30
+
+            # Calcul des secondes (approximation)
+            seconds = diff.days * 24 * 3600 + diff.seconds
+
+            return render(request, 'index.html', {'form': form, 'diff': diff, 'years': years, 'months': months, 'days': days, 'seconds': seconds})
     else:
         form = DateForm()
     return render(request, 'index.html', {'form': form})
