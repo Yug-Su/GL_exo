@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import DateForm
 from datetime import date
+from django.http import Http404, HttpResponse
 
 # Create your views here.
 
@@ -20,8 +21,10 @@ def index(request):
 
             # Calcul des secondes (approximation)
             seconds = diff.days * 24 * 3600 + diff.seconds
-
-            return render(request, 'index.html', {'form': form, 'diff': diff, 'years': years, 'months': months, 'days': days, 'seconds': seconds})
+            if years >=0:
+                return render(request, 'index.html', {'form': form, 'diff': diff, 'years': years, 'months': months, 'days': days, 'seconds': seconds})
+            else:
+                raise Http404("Date de naissance invalide")  # Ou une autre exception appropriée
     else:
         form = DateForm()
     return render(request, 'index.html', {'form': form})
