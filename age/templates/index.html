@@ -25,7 +25,7 @@
 
   <style>
     /* Style du formulaire */
-    #dateForm {
+    #monFormulaire {
     width: 300px; /* Largeur du formulaire */
     margin: 20px auto; /* Centre le formulaire */
     padding: 20px;
@@ -34,20 +34,20 @@
     background-color: #f8f9fa; /* Couleur de fond claire */
     }
 
-    #dateForm label {
+    #monFormulaire label {
     display: block; /* Label au-dessus du champ */
     margin-bottom: 5px;
     font-weight: bold;
     }
 
-    #dateForm input[type="date"] {
+    #monFormulaire input[type="date"] {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 3px;
     }
 
-    #dateForm button {
+    #monFormulaire button {
     background-color: #007bff; /* Couleur du bouton */
     color: white;
     padding: 10px 15px;
@@ -57,7 +57,7 @@
     margin-top: 10px;
     }
 
-    #dateForm button:hover {
+    #monFormulaire button:hover {
     background-color: #0056b3; /* Couleur au survol */
     }
 
@@ -176,18 +176,18 @@
           <div class="col-lg-6 content order-last  order-lg-first" data-aos="fade-up" data-aos-delay="100">
             <h3 style="text-align: center;">AgeCalculator</h3>
             
-            <form method="post" id="dateForm">
+            <form method="post" id="monFormulaire">
               {% csrf_token %}
               {{ form.as_p }}
               <button type="submit">Calculer</button>
           </form>
 
           <div class="age-container">
-            <div class="age-result">
+            <div class="age-result" id="ageResult">
               {% if diff %}
               <p> Âge : <strong>{{ years }}</strong> <small>ans</small>, <strong>{{ months }}</strong> <small>mois</small>, <strong>{{ days }}</strong> <small>jours</small>, <strong>{{ seconds }}</strong> <small>secondes</small></p>
               {% endif %}  
-            </div>
+          </div>
           </div>
 
           </div>
@@ -211,7 +211,62 @@
         Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
       </div>
     </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('monFormulaire');
 
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const datePicker = document.getElementById('datePicker');
+        const dateSaisie = datePicker.value;
+
+        if (!dateSaisie) {
+            // Champ vide
+            afficherErreur(datePicker, "La date est obligatoire.");
+            return;
+        }
+
+        const anneeSaisie = parseInt(dateSaisie.split('-')[0]); // Extraire l'année
+        const anneeActuelle = new Date().getFullYear();
+
+        if (isNaN(anneeSaisie) || anneeSaisie > anneeActuelle) {
+            afficherErreur(datePicker, "Année invalide. Veuillez saisir une année antérieure ou égale à l'année actuelle.");
+            return;
+        }
+
+        form.submit();
+    });
+
+    function afficherErreur(element, message) {
+        // Supprimer les messages d'erreur précédents pour ce champ
+        let previousError = element.nextElementSibling;
+        while (previousError && previousError.classList.contains('error-message')) {
+            previousError.remove();
+            previousError = element.nextElementSibling;
+        }
+
+        const messageErreur = document.createElement('p');
+        messageErreur.textContent = message;
+        messageErreur.style.color = 'red';
+        messageErreur.classList.add('error-message'); // Ajouter une classe pour faciliter la suppression
+        element.parentNode.insertBefore(messageErreur, element.nextSibling); // Insérer après le champ
+    }
+});
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const ageResult = document.getElementById('ageResult');
+
+    if (ageResult) { // Vérifier si l'élément existe (si `diff` est True)
+        setTimeout(function() {
+            ageResult.innerHTML = ''; // Effacer le contenu
+            // ou ageResult.style.display = 'none'; // Cacher l'élément
+        }, 5000); // 15000 millisecondes = 15 secondes
+    }
+});
+</script>
     
   </footer>
 
